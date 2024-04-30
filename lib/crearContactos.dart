@@ -106,6 +106,7 @@ class _CrearContactos extends State<CrearContactos> {
           if (formKey.currentState!.validate()) {
             formKey.currentState!.save();
             crearContacto();
+            Navigator.pop(context);
           }
         },
         child: Text("Guardar Nuevo Contacto"));
