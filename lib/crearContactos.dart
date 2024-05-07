@@ -114,7 +114,7 @@ class _CrearContactos extends State<CrearContactos> {
 
   crearContacto() async {
     ContactModel contact =
-        ContactModel.fromValues("", nombre, apellidos, email, telefono);
+        ContactModel.fromValues("", nombre, apellidos, email, telefono, "0");
     ContactProvider provider = ContactProvider();
     await provider.init();
 

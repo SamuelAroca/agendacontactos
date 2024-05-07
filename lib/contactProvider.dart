@@ -24,9 +24,10 @@ class ContactProvider {
           nombre TEXT,
           apellidos TEXT,
           email TEXT,
-          telefono TEXT);
+          telefono TEXT,
+          sincronizado TEXT);
         """);
-    }, version: 2);
+    }, version: 5);
   }
 
   Future<ContactResponseModel> obternerContactos() async {
@@ -39,13 +40,28 @@ class ContactProvider {
 
   Future<void> agregarContacto(ContactModel contacto) async {
     await this.db!.rawInsert("""
-          INSERT INTO Contactos (_id, nombre, apellidos, email, telefono)
-          VALUES ( ?, ?, ?, ?, ?) """, [
+          INSERT INTO Contactos (_id, nombre, apellidos, email, telefono, sincronizado)
+          VALUES ( ?, ?, ?, ?, ?, ?) """, [
       contacto.id,
       contacto.nombre,
       contacto.apellidos,
       contacto.email,
-      contacto.telefono
+      contacto.telefono,
+      contacto.sincronizado
     ]);
+  }
+
+  Future<ContactResponseModel> obternerContactosPendientesSincronizar() async {
+    var results = await this.db!.rawQuery("""
+                  SELECT * FROM Contactos WHERE sincronizado == '0'
+                  """);
+    ContactResponseModel response = ContactResponseModel.fromDB(results);
+    return response;
+  }
+
+  Future<void> marcarContactosSincronizados() async {
+    await this.db!.rawUpdate("""
+    UPDATE Contactos SET sincronizado = '1'
+    """);
   }
 }
